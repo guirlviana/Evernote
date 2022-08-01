@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const Note = require("../models/notes");
+const withAuth = require("../middlewares/auth");
 
-router.post("/", async (req, res) => {
+router.post("/", withAuth, async (req, res) => {
   const { title, body } = req.body;
   try {
     let note = new Note({ title: title, body: body, author: req.user._id });
