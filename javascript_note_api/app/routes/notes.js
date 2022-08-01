@@ -40,9 +40,9 @@ router.put("/:id", withAuth, async (req, res) => {
   try {
     let note = await Note.findById(id);
     if (isOwner(req.user, note)) {
-      let note = await Note.findOneAndUpdate(
+      let note = await Note.findByIdAndUpdate(
         id,
-        { $set: { title: title, body: body, updated_at: Date.now() } },
+        { $set: { title: title, body: body } },
         { upsert: true, new: true }
       );
 
@@ -50,6 +50,19 @@ router.put("/:id", withAuth, async (req, res) => {
     } else res.status(403).json({ error: "Permission denied" });
   } catch (error) {
     res.status(500).json({ error: "Not possible to update note" });
+  }
+});
+
+router.delete("/:id", withAuth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    let note = await Note.findById(id);
+    if (isOwner(req.user, note)) {
+      await note.delete();
+      res.status(204).json({ message: "ok" });
+    } else res.status(403).json({ error: "Permission denied" });
+  } catch (error) {
+    res.status(500).json({ error: "Not possible to delete note" });
   }
 });
 
