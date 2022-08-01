@@ -59,10 +59,10 @@ router.delete("/:id", withAuth, async (req, res) => {
     let note = await Note.findById(id);
     if (isOwner(req.user, note)) {
       await note.delete();
-      res.status(204).json({ message: "ok" });
+      res.json({ message: "OK" }).status(204);
     } else res.status(403).json({ error: "Permission denied" });
   } catch (error) {
-    res.status(500).json({ error: "Not possible to delete note" });
+    res.status(500).json({ error: "Problem to delete a note" });
   }
 });
 
