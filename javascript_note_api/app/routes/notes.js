@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const Note = require("../models/notes");
 const withAuth = require("../middlewares/auth");
+const isOwner = require("../utils/isOwner");
 
 router.get("/search", withAuth, async (req, res) => {
   const { query } = req.query;
@@ -78,10 +79,5 @@ router.delete("/:id", withAuth, async (req, res) => {
     res.status(500).json({ error: "Problem to delete a note" });
   }
 });
-
-const isOwner = (user, note) => {
-  if (JSON.stringify(user._id) == JSON.stringify(note.author._id)) return true;
-  return false;
-};
 
 module.exports = router;
